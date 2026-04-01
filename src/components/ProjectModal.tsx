@@ -11,10 +11,10 @@ import { SwipeIndicator } from "./SwipeIndicator";
 
 interface Project {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   imageUrl?: string;
   images?: string[];
-  fullDescription?: string;
+  fullDescription?: string | React.ReactNode;
   technologies?: string[];
   role?: string;
   year?: string;
@@ -282,11 +282,13 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             <div className="text-white/90 mb-6 leading-relaxed space-y-4">
-              {(project.fullDescription || project.description)
-                .split('\n\n')
-                .map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+              {typeof (project.fullDescription || project.description) === "string"
+                ? ((project.fullDescription || project.description) as string)
+                    .split('\n\n')
+                    .map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))
+                : (project.fullDescription || project.description)}
             </div>
 
             {/* Technologies */}

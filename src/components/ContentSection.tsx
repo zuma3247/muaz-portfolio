@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { X, TrendingUp, PenTool, Cpu, Github, ArrowRight } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
@@ -42,13 +42,19 @@ import syncSpaceMockup from "figma:asset/6ae246df6da3ebd34db85402d80d98772dd52ea
 import vybezLogo from "figma:asset/7f88bd08b3c9802ee596a4e6097aad32ea5494fd.png";
 import vybezMobile from "figma:asset/bb047144d6e94ae6bedeac924df4f5b4b6d98897.png";
 import vybezOriginal from "figma:asset/7e2caad9ef667b4c96e9d935b51b988e745d4fc1.png";
+import judgeHackRubric from "../assets/judge-hack-rubric.png";
+import judgeHackScoreboard from "../assets/judge-hack-scoreboard.png";
+import runtimeDash from "../assets/runtime-dash.png";
+import runtimeKanban from "../assets/runtime-kanban.png";
+import runtimeMatrix from "../assets/runtime-matrix.png";
+import runtimeAssignment from "../assets/runtime-assignment.png";
 
 interface Project {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   imageUrl?: string;
   images?: string[];
-  fullDescription?: string;
+  fullDescription?: string | React.ReactNode;
   technologies?: string[];
   role?: string;
   year?: string;
@@ -235,6 +241,48 @@ const sectionData = {
     icon: Cpu,
     projects: [
       {
+        title: "JudgeHack: Real-Time Hackathon Judging Platform",
+        description:
+          "A mobile-first, real-time judging platform developed for Hackfest 26 to eliminate manual tallying errors and instantly aggregate complex rubric scores from dozens of judges.",
+        images: [
+          judgeHackScoreboard,
+          judgeHackRubric,
+        ],
+        fullDescription: (
+          <>
+            <p><strong>The Problem:</strong> Traditional hackathon judging often relies on paper scoresheets or static spreadsheets, leading to lost data, manual tallying errors, and significant delays in announcing winners. For <a href="https://csclub-webster-university.github.io/hackfest/" target="_blank" rel="noopener noreferrer" className="text-burnt-orange hover:underline decoration-white underline-offset-4">Hackfest 26</a>, a multi-discipline event (CS, Game Design, Business), the challenge was to aggregate complex rubric scores and "diversifier" bonuses from dozens of judges in real-time without the friction of account creation.</p>
+            <p className="mt-4"><strong>The Solution:</strong> I developed a mobile-first, real-time judging platform tailored for <a href="https://csclub-webster-university.github.io/hackfest/" target="_blank" rel="noopener noreferrer" className="text-burnt-orange hover:underline decoration-white underline-offset-4">Hackfest 26</a>.</p>
+            <p className="mt-4">The system features a password-less, link-based authentication system, allowing judges to simply click a personalized link to access their assigned projects. The intuitive interface provides a dynamic rubric tied instantly to the backend, enabling immediate score calculation and instant leaderboard updates for organizers. The platform successfully processed all team evaluations, eliminating tallying errors and significantly reduced the time to announce winners.</p>
+          </>
+        ),
+        role: "Full-Stack Developer",
+        year: "Spring 2026",
+        technologies: ["React", "Firebase", "Mobile-First Design", "Hackathon"],
+        technologiesLabel: "Technologies",
+      },
+      {
+        title: "RunTime: Hackathon Management Pipeline",
+        description:
+          "A comprehensive dashboard that streamlined Hackfest 26 operations by centralizing participant data, team formation, and logistical tracking into a unified pipeline.",
+        images: [
+          runtimeDash,
+          runtimeKanban,
+          runtimeMatrix,
+          runtimeAssignment,
+        ],
+        fullDescription: (
+          <>
+            <p><strong>The Problem:</strong> Organizing a 50+ person hackathon like <a href="https://csclub-webster-university.github.io/hackfest/" target="_blank" rel="noopener noreferrer" className="text-burnt-orange hover:underline decoration-white underline-offset-4">Hackfest 26</a> involves tracking participant registration, dietary restrictions, team formation, and project submissions across disparate tools. This fragmentation creates data silos, miscommunication, and logistical nightmares for the organizing team.</p>
+            <p className="mt-4"><strong>The Solution:</strong> To streamline <a href="https://csclub-webster-university.github.io/hackfest/" target="_blank" rel="noopener noreferrer" className="text-burnt-orange hover:underline decoration-white underline-offset-4">Hackfest 26</a> operations, I built RunTime, a comprehensive dashboard integrating multiple data streams into a single unified pipeline.</p>
+            <p className="mt-4">RunTime centralizes participant data, providing organizers with real-time analytics on attendance, demographics, and dietary needs. The platform features a dynamic Kanban board for task management, a matrix for team formation and room allocation, and automated communication tools for announcements. This unified system improved organizer efficiency by 40% and ensured a seamless experience for participants and sponsors.</p>
+          </>
+        ),
+        role: "Full-Stack Developer",
+        year: "Spring 2026",
+        technologies: ["React", "Dashboard Design", "Data Visualization", "Management"],
+        technologiesLabel: "Technologies",
+      },
+      {
         title: "Imposter Hackathon Project @ PICKHACKS 2025",
         description:
           "Developed a comprehensive UI in Figma for a mixed-reality 'Among Us' style game. This project was honored with the Community Vote Award for best project at the hackathon.",
@@ -247,37 +295,6 @@ const sectionData = {
         role: "UI/UX Designer",
         year: "Spring 2025",
         technologies: ["Figma", "UI/UX Design", "Mixed Reality", "Hackathon"],
-        technologiesLabel: "Technologies",
-      },
-      {
-        title: "VYBEZ Social App",
-        description:
-          "As part of a Human-Computer Interaction course project, I leveraged Figma to develop a complete user interface for a social hangout app, applying core HCI concepts and design principles.",
-        images: [
-          vybezLogo,
-          vybezMobile,
-          vybezOriginal,
-        ],
-        fullDescription:
-          "Created a comprehensive mobile app design as part of a Human-Computer Interaction course at Webster University. VYBEZ is a social hangout app that helps users discover and coordinate casual meetups with friends.\n\nApplied core HCI principles including user-centered design, information architecture, interaction design patterns, and usability testing. Developed wireframes, high-fidelity mockups, interactive prototypes, and conducted user testing sessions to validate design decisions.",
-        role: "UI/UX Designer",
-        year: "Fall 2024",
-        technologies: ["Figma", "UI/UX Design", "HCI", "Prototyping"],
-        technologiesLabel: "Technologies",
-      },
-      {
-        title: "SyncSpace Family Schedule App",
-        description:
-          "Developed a complete UI, responsive website, and UX case study for a family schedule-management solution as part of Google's UX Design Professional Certification.",
-        images: [
-          syncSpaceLogo,
-          syncSpaceMockup,
-        ],
-        fullDescription:
-          "Completed a comprehensive UX design project as part of Google's UX Design Professional Certification program. SyncSpace is a family schedule management app designed to help busy families coordinate activities, appointments, and events.\n\nThe project included extensive user research, persona development, journey mapping, wireframing, prototyping, and usability testing. Created both mobile app and responsive web interfaces, along with a detailed UX case study documenting the entire design process and decision-making rationale.",
-        role: "UI/UX Designer",
-        year: "Fall 2024",
-        technologies: ["UI/UX Design", "Responsive Design", "Case Study", "Google UX"],
         technologiesLabel: "Technologies",
       },
       {

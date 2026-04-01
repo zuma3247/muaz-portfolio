@@ -12,7 +12,7 @@ import { ImageWithLoader } from "./ImageWithLoader";
 
 interface ProjectCardProps {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   imageUrl?: string;
   images?: string[];
   onClick: () => void;
