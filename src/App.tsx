@@ -72,9 +72,9 @@ export default function App() {
 
   return (
     <div className="w-full" role="application">
-      {/* Global Navigation - Show everywhere except loading and hub */}
-      {!isLoading && currentSection && (
-        <GlobalNav 
+      {/* Global Navigation - Show everywhere except loading */}
+      {!isLoading && (
+        <GlobalNav
           currentSection={currentSection}
           onNavigate={handleGlobalNavigation}
         />

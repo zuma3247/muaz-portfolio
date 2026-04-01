@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Menu, X, User, Briefcase, Mail, TrendingUp, PenTool, Cpu, Home, Award } from "lucide-react";
 
 interface GlobalNavProps {
-  currentSection: string;
+  currentSection: string | null;
   onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
 export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const isHub = currentSection === null;
 
   const navItems = [
     { id: "hub", label: "Home", icon: Home },
@@ -28,10 +29,10 @@ export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
 
   return (
     <>
-      {/* Menu button - fixed position */}
+      {/* Menu button - fixed position (hide on desktop when on hub, since hub has inline nav) */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-8 left-8 z-50 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all"
+        className={`fixed top-8 left-8 z-50 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all ${isHub ? "md:hidden" : ""}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, x: -20 }}
