@@ -36,6 +36,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [count, setCount] = useState(0);
   const [fullScreenImage, setFullScreenImage] = useState<number | null>(null);
 
+  const displayImages = project?.images || (project?.imageUrl ? [project.imageUrl] : []);
+  const hasMultipleImages = displayImages.length > 1;
+
   useEffect(() => {
     if (!api) return;
 
@@ -47,10 +50,47 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     });
   }, [api]);
 
-  if (!project) return null;
+  // Body scroll lock
+  useEffect(() => {
+    if (project) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [project]);
 
-  const displayImages = project.images || (project.imageUrl ? [project.imageUrl] : []);
-  const hasMultipleImages = displayImages.length > 1;
+  // Keyboard navigation
+  useEffect(() => {
+    if (!project) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (fullScreenImage !== null) {
+          setFullScreenImage(null);
+        } else {
+          onClose();
+        }
+      }
+
+      if (fullScreenImage !== null && hasMultipleImages) {
+        if (e.key === "ArrowRight") {
+          setFullScreenImage((prev) => 
+            prev !== null ? (prev + 1) % displayImages.length : null
+          );
+        } else if (e.key === "ArrowLeft") {
+          setFullScreenImage((prev) => 
+            prev !== null ? (prev - 1 + displayImages.length) % displayImages.length : null
+          );
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [project, fullScreenImage, hasMultipleImages, displayImages.length, onClose]);
+
+  if (!project) return null;
 
   const openFullScreen = (index: number) => {
     setFullScreenImage(index);
@@ -90,6 +130,8 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Modal content */}
         <motion.div
           className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass rounded-lg"
+          role="dialog"
+          aria-modal="true"
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}

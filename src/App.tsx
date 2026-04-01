@@ -70,11 +70,24 @@ export default function App() {
     setCurrentSection(section);
     const url = section ? `/${section}` : '/';
     window.history.pushState({ section }, '', url);
-  };
 
-  const handleSkipLoading = () => {
-    setIsLoading(false);
-    localStorage.setItem('hasVisitedNexus', 'true');
+    // Scroll to top instantly
+    window.scrollTo({ top: 0, behavior: "instant" });
+
+    // Update document title
+    const titleMap: Record<string, string> = {
+      leadership: "Leadership",
+      design: "Design",
+      technology: "Technology",
+      about: "About Me",
+      contact: "Contact",
+      "work-experience": "Work Experience",
+      websterleads: "WebsterLEADS"
+    };
+    
+    document.title = section && titleMap[section] 
+      ? `Muaz — ${titleMap[section]}` 
+      : "Muaz — Portfolio Nexus";
   };
 
   const handleCoreSelect = (section: "leadership" | "design" | "technology") => {
@@ -121,7 +134,7 @@ export default function App() {
 
       <AnimatePresence mode="wait">
         {isLoading ? (
-          <LoadingScreen key="loading" onSkip={handleSkipLoading} />
+          <LoadingScreen key="loading" />
         ) : currentSection === "about" ? (
           <AboutSection key="about" onBack={handleBack} onNavigate={handleGlobalNavigation} />
         ) : currentSection === "work-experience" ? (

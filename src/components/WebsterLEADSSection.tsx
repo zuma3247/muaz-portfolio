@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import {
-  ArrowLeft, Award, Heart, CheckCircle, Star, Shield, Zap,
+  X, Award, Heart, CheckCircle, Star, Shield, Zap,
   Globe, Cpu, PenTool, BookOpen, Users, TrendingUp
 } from "lucide-react";
 import { Breadcrumb } from "./Breadcrumb";
@@ -471,12 +471,12 @@ export function WebsterLEADSSection({ onBack, onNavigate }: WebsterLEADSSectionP
       {/* Back button */}
       <motion.button
         onClick={onBack}
-        className="fixed top-8 right-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
+        className="fixed top-8 left-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group lg:hidden"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Back to Hub"
+        aria-label="Go back to hub"
       >
-        <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
+        <X className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
       <main className="relative z-10 max-w-6xl mx-auto px-4 pt-24 pb-16 md:py-24">
@@ -552,7 +552,7 @@ export function WebsterLEADSSection({ onBack, onNavigate }: WebsterLEADSSectionP
       </main>
 
       <div className="relative z-10 mt-16">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection="websterleads" />
       </div>
     </motion.div>
   );

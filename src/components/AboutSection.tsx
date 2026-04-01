@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowLeft, User } from "lucide-react";
+import { X, User } from "lucide-react";
 import profileImage from "figma:asset/4818c55379a67e1e42d245e328dec518de1744b1.png";
 import { Breadcrumb } from "./Breadcrumb";
 import { Footer } from "./Footer";
@@ -23,11 +23,12 @@ export function AboutSection({ onBack, onNavigate }: AboutSectionProps) {
       {/* Back button */}
       <motion.button
         onClick={onBack}
-        className="fixed top-8 right-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
+        className="fixed top-8 left-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Go back to hub"
       >
-        <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
+        <X className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
       {/* Content */}
@@ -171,7 +172,7 @@ export function AboutSection({ onBack, onNavigate }: AboutSectionProps) {
       </main>
 
       <div className="relative z-10">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection="about" />
       </div>
     </motion.div>
   );

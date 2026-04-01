@@ -162,14 +162,19 @@ export function NexusHub({
                 <motion.button
                   key={card.id}
                   onClick={() => onCoreSelect(card.id)}
-                  className="group flex flex-1 items-center gap-5 p-5 rounded-xl glass border border-white/10 text-left hover:border-opacity-40 transition-all w-full min-h-[100px]"
+                  className="group cursor-pointer flex flex-1 items-center gap-5 p-5 rounded-xl glass border border-white/10 text-left hover:border-opacity-40 transition-all w-full min-h-[100px]"
                   style={{
                     "--card-color": card.color,
                   } as React.CSSProperties}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + i * 0.1 }}
-                  whileHover={{ scale: 1.02, borderColor: card.color, transition: { duration: 0.15, ease: "easeOut" } }}
+                  whileHover={{ 
+                    scale: 1.02, 
+                    borderColor: card.color, 
+                    boxShadow: `0 0 20px ${card.color}40`,
+                    transition: { duration: 0.15, ease: "easeOut" } 
+                  }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex-1">
@@ -203,7 +208,7 @@ export function NexusHub({
       </div>
       
       <div className="mt-auto pt-16">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection="hub" />
       </div>
     </main>
   );

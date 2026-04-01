@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { TrendingUp, PenTool, Cpu, ArrowLeft, Github, ArrowRight } from "lucide-react";
+import { X, TrendingUp, PenTool, Cpu, Github, ArrowRight } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
 import { Breadcrumb } from "./Breadcrumb";
@@ -327,11 +327,12 @@ export function ContentSection({ section, onBack, onNavigate }: ContentSectionPr
       {/* Back button */}
       <motion.button
         onClick={onBack}
-        className="fixed top-8 right-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
+        className="fixed top-8 left-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Go back to hub"
       >
-        <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
+        <X className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
       {/* Content */}
@@ -413,7 +414,7 @@ export function ContentSection({ section, onBack, onNavigate }: ContentSectionPr
       />
 
       <div className="relative z-10 mt-16 text-left">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection={section} />
       </div>
     </motion.div>
   );

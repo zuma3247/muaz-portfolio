@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, User, Briefcase, Mail, TrendingUp, PenTool, Cpu, Home, Award } from "lucide-react";
 import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
 
@@ -28,15 +28,26 @@ export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   return (
     <>
       {/* Menu button - fixed position (hide on desktop when on hub, since hub has inline nav) */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed top-8 left-8 z-50 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all ${isHub ? "md:hidden" : ""}`}
+        className={`fixed top-8 right-8 z-50 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all ${isHub ? "md:hidden" : ""}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0, x: -20 }}
+        initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3 }}
         aria-label="Menu"
@@ -63,10 +74,10 @@ export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
 
             {/* Menu panel */}
             <motion.div
-              className="fixed left-0 top-0 bottom-0 z-40 w-80 max-w-[85vw] glass p-8 overflow-y-auto"
-              initial={{ x: "-100%" }}
+              className="fixed right-0 top-0 bottom-0 z-40 w-80 max-w-[85vw] glass p-8 overflow-y-auto"
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
+              exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25 }}
             >
               {/* Header */}

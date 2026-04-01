@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowLeft, Briefcase, Calendar, MapPin } from "lucide-react";
+import { X, Briefcase, Calendar, MapPin } from "lucide-react";
 import { Breadcrumb } from "./Breadcrumb";
 import { useState } from "react";
 import { Footer } from "./Footer";
@@ -107,11 +107,12 @@ export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProp
       {/* Back button */}
       <motion.button
         onClick={onBack}
-        className="fixed top-8 right-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
+        className="fixed top-8 left-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Go back to hub"
       >
-        <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
+        <X className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
       {/* Jump Links - Sticky on desktop */}
@@ -302,7 +303,7 @@ export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProp
       </main>
 
       <div className="relative z-10 mt-16">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection="work-experience" />
       </div>
     </motion.div>
   );

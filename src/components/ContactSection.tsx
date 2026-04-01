@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowLeft, Mail, Linkedin, MessageSquare } from "lucide-react";
+import { X, Mail, Linkedin, MessageSquare } from "lucide-react";
 import { Breadcrumb } from "./Breadcrumb";
 import { Footer } from "./Footer";
 
@@ -22,11 +22,12 @@ export function ContactSection({ onBack, onNavigate }: ContactSectionProps) {
       {/* Back button */}
       <motion.button
         onClick={onBack}
-        className="fixed top-8 right-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
+        className="fixed top-8 left-8 z-40 w-14 h-14 rounded-full glass flex items-center justify-center hover:glow-orange transition-all group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Go back to hub"
       >
-        <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
+        <X className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
       {/* Content */}
@@ -179,7 +180,7 @@ export function ContactSection({ onBack, onNavigate }: ContactSectionProps) {
       </main>
 
       <div className="relative z-10 mt-16">
-        <Footer onNavigate={onNavigate} />
+        <Footer onNavigate={onNavigate} activeSection="contact" />
       </div>
     </motion.div>
   );

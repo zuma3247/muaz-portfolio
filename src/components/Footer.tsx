@@ -3,9 +3,14 @@ import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png"
 
 interface FooterProps {
   onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
+  activeSection?: string;
 }
 
-export function Footer({ onNavigate }: FooterProps) {
+export function Footer({ onNavigate, activeSection }: FooterProps) {
+  const getNavClass = (section: string) => {
+    return `transition-colors ${activeSection === section ? 'text-burnt-orange' : 'hover:text-burnt-orange'}`;
+  };
+
   return (
     <footer className="w-full bg-[#0a0e1a] border-t border-white/10 py-8 relative z-20">
       <div className="max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -30,13 +35,13 @@ export function Footer({ onNavigate }: FooterProps) {
 
         {/* Center: Quick Links */}
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/60">
-          <button onClick={() => onNavigate("about")} className="hover:text-burnt-orange transition-colors">About</button>
-          <button onClick={() => onNavigate("work-experience")} className="hover:text-burnt-orange transition-colors">Work</button>
-          <button onClick={() => onNavigate("contact")} className="hover:text-burnt-orange transition-colors">Contact</button>
-          <button onClick={() => onNavigate("leadership")} className="hover:text-burnt-orange transition-colors">Leadership</button>
-          <button onClick={() => onNavigate("design")} className="hover:text-burnt-orange transition-colors">Design</button>
-          <button onClick={() => onNavigate("technology")} className="hover:text-burnt-orange transition-colors">Technology</button>
-          <button onClick={() => onNavigate("websterleads")} className="hover:text-burnt-orange transition-colors">WebsterLEADS</button>
+          <button onClick={() => onNavigate("about")} className={getNavClass("about")}>About</button>
+          <button onClick={() => onNavigate("work-experience")} className={getNavClass("work-experience")}>Work</button>
+          <button onClick={() => onNavigate("contact")} className={getNavClass("contact")}>Contact</button>
+          <button onClick={() => onNavigate("leadership")} className={getNavClass("leadership")}>Leadership</button>
+          <button onClick={() => onNavigate("design")} className={getNavClass("design")}>Design</button>
+          <button onClick={() => onNavigate("technology")} className={getNavClass("technology")}>Technology</button>
+          <button onClick={() => onNavigate("websterleads")} className={getNavClass("websterleads")}>WebsterLEADS</button>
         </nav>
 
         {/* Right: Social Icons */}
