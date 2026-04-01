@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Html, Float, Edges, Environment, MeshTransmissionMaterial, Sparkles, Stars } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
+// @react-three/postprocessing@3.x requires R3F v9 — crashes at runtime with R3F v8. Removed.
 import { TextureLoader, MathUtils, DoubleSide, type Mesh, type Group } from "three";
 import { Users, PenTool, Cpu } from "lucide-react";
 import type { QualityTier } from "../utils/detectQuality";
@@ -50,14 +50,22 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
 
   return (
     <group>
+      {/* Inner glowing core — sibling, not child of the mesh */}
+      <group position={[0, 0, -0.5]}>
+        <mesh>
+          <icosahedronGeometry args={[0.6, 1]} />
+          <meshBasicMaterial color="#E36B3D" toneMapped={false} />
+        </mesh>
+        <pointLight color="#E36B3D" intensity={isLite ? 1.5 : 3} distance={10} />
+      </group>
+
       <mesh ref={meshRef} position={[0, 0, -0.5]}>
         <icosahedronGeometry args={[1.5, 0]} />
         {isLite ? (
           <meshStandardMaterial color="#0A1128" metalness={0.9} roughness={0.1} />
         ) : (
           <MeshTransmissionMaterial
-            buffer={null!}
-            color="#0A1128" // Dark navy tint
+            color="#0A1128"
             attenuationColor="#E36B3D"
             attenuationDistance={5}
             thickness={1.5}
@@ -68,14 +76,6 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
             backside={true}
           />
         )}
-        
-        {/* Inner Glowing Core */}
-        <mesh>
-          <icosahedronGeometry args={[0.6, 1]} />
-          <meshBasicMaterial color="#E36B3D" toneMapped={false} />
-          <pointLight color="#E36B3D" intensity={isLite ? 1.5 : 3} distance={10} />
-        </mesh>
-
         <Edges scale={1.001} threshold={15} color="#3D8BE3" opacity={0.3} transparent />
       </mesh>
       
@@ -135,6 +135,15 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
 
   return (
     <group ref={groupRef}>
+      {/* Glowing inner core — sibling group, not nested inside the mesh */}
+      <group>
+        <mesh>
+          <sphereGeometry args={[0.15, 16, 16]} />
+          <meshBasicMaterial color={color} toneMapped={false} />
+        </mesh>
+        <pointLight color={color} intensity={hovered ? 5 : 2} distance={RADIUS * 3} decay={2} />
+      </group>
+
       <mesh
         ref={meshRef}
         onClick={() => onSelect(id)}
@@ -142,7 +151,7 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
         onPointerOut={() => setHovered(false)}
       >
         <sphereGeometry args={[0.35, 32, 32]} />
-        <MeshTransmissionMaterial 
+        <MeshTransmissionMaterial
           color="#ffffff"
           roughness={0}
           transmission={0.9}
@@ -150,13 +159,6 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
           ior={1.5}
           transparent
         />
-        
-        {/* Glowing Inner Core causes massive bloom! */}
-        <mesh>
-          <sphereGeometry args={[0.15, 16, 16]} />
-          <meshBasicMaterial color={color} toneMapped={false} />
-          <pointLight color={color} intensity={hovered ? 5 : 2} distance={RADIUS * 3} decay={2} />
-        </mesh>
       </mesh>
 
       <Html
@@ -234,33 +236,29 @@ export function NexusScene({ onCoreSelect, tier, logoSrc }: NexusSceneProps) {
       <directionalLight position={[5, 10, 5]} intensity={2} />
       <directionalLight position={[-5, -10, -5]} intensity={0.5} color="#3D8BE3" />
 
-      {/* Main rotating assembly */}
       <group position={[0, -0.2, 0]}>
+        {/* Float only wraps the central composite — nodes use absolute world positions */}
         <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
           <CentralComposite logoSrc={logoSrc} isLite={isLite} />
-          <OrbitalRing tiltRad={tiltRad} />
-          
-          {CORE_DEFS.map((def) => (
-            <OrbitingNode
-              key={def.id}
-              {...def}
-              tiltRad={tiltRad}
-              onSelect={onCoreSelect}
-            />
-          ))}
         </Float>
+
+        <OrbitalRing tiltRad={tiltRad} />
+
+        {CORE_DEFS.map((def) => (
+          <OrbitingNode
+            key={def.id}
+            {...def}
+            tiltRad={tiltRad}
+            onSelect={onCoreSelect}
+          />
+        ))}
       </group>
 
       {/* Atmospheric Space Dust */}
       <Sparkles count={particleCount} scale={18} size={2.5} speed={0.4} color="#E36B3D" opacity={0.6} />
       <Stars radius={20} depth={50} count={isLite ? 500 : 2500} factor={4} saturation={0.5} fade speed={1} />
 
-      {/* High-End Post-Processing */}
-      {!isLite && (
-        <EffectComposer>
-          <Bloom luminanceThreshold={0.8} mipmapBlur intensity={1.5} />
-        </EffectComposer>
-      )}
+      {/* Post-processing removed: @react-three/postprocessing@3 requires R3F v9 */}
     </Canvas>
   );
 }
