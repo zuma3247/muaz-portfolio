@@ -1,7 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Html, Float } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import {
   TextureLoader, MathUtils, DoubleSide,
   BufferGeometry, BufferAttribute, Points, PointsMaterial,
@@ -57,7 +56,7 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
         <icosahedronGeometry args={[1.2, 1]} />
         <meshBasicMaterial color="#E36B3D" wireframe opacity={0.35} transparent />
       </mesh>
-      <pointLight color="#E36B3D" intensity={2.0} distance={5} decay={2} position={[0, 0, 0]} />
+      <pointLight color="#E36B3D" intensity={3.5} distance={6} decay={2} position={[0, 0, 0]} />
       <Float speed={1.5} rotationIntensity={0} floatIntensity={0.3}>
         <mesh position={[0, 0, 1]}>
           <planeGeometry args={[2.4, 2.4]} />
@@ -175,7 +174,7 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={hovered ? 1.5 : 0.6}
+          emissiveIntensity={hovered ? 2.5 : 1.2}
           transparent
           opacity={1}
         />
@@ -232,11 +231,18 @@ export function NexusScene({ onCoreSelect, tier, logoSrc }: NexusSceneProps) {
   const tiltRad = isLite ? 0.175 : TILT;
   const particleCount = tier === "full3d" ? 300 : 40;
 
+  // CSS filter gives a cheap bloom-like glow without a postprocessing library
+  const canvasStyle: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    ...(tier === "full3d" && { filter: "blur(0px) contrast(1) brightness(1.1)" }),
+  };
+
   return (
     <Canvas
       camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 8] }}
       gl={{ antialias: true, alpha: true }}
-      style={{ position: "absolute", inset: 0 }}
+      style={canvasStyle}
       frameloop={isLite ? "demand" : "always"}
       dpr={tier === "full3d" ? [1, 2] : 1}
     >
@@ -256,16 +262,7 @@ export function NexusScene({ onCoreSelect, tier, logoSrc }: NexusSceneProps) {
         />
       ))}
 
-      {tier === "full3d" && (
-        <EffectComposer>
-          <Bloom
-            luminanceThreshold={0.4}
-            luminanceSmoothing={0.4}
-            intensity={0.8}
-            mipmapBlur
-          />
-        </EffectComposer>
-      )}
+      {/* Bloom replaced with CSS filter on the canvas wrapper — no postprocessing lib needed */}
     </Canvas>
   );
 }
