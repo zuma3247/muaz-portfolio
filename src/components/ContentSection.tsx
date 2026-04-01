@@ -1,9 +1,10 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { TrendingUp, PenTool, Cpu, ArrowLeft } from "lucide-react";
+import { TrendingUp, PenTool, Cpu, ArrowLeft, Github, ArrowRight } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
 import { Breadcrumb } from "./Breadcrumb";
+import { Footer } from "./Footer";
 import ifgstlImage from "figma:asset/a66c0e4d000523e0dba4c39e097c3cf49ed2d32f.png";
 import ifgstlBackdrop from "figma:asset/c9c5dfe1e766f52b4d6b54c7a60601603ca81043.png";
 import ifgstlBooklet from "figma:asset/13ce84d6cde769f80e7627b072eda3dcd6acb332.png";
@@ -61,6 +62,7 @@ interface Project {
 interface ContentSectionProps {
   section: "leadership" | "design" | "technology";
   onBack: () => void;
+  onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
 const sectionData = {
@@ -307,7 +309,7 @@ const sectionData = {
   },
 };
 
-export function ContentSection({ section, onBack }: ContentSectionProps) {
+export function ContentSection({ section, onBack, onNavigate }: ContentSectionProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const data = sectionData[section];
   const Icon = data.icon;
@@ -333,7 +335,7 @@ export function ContentSection({ section, onBack }: ContentSectionProps) {
       </motion.button>
 
       {/* Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 py-16 md:px-8 md:py-24">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -360,6 +362,26 @@ export function ContentSection({ section, onBack }: ContentSectionProps) {
           </h1>
         </motion.header>
 
+        {section === "technology" && (
+          <motion.a
+            href="https://github.com/zuma3247"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 p-5 mb-8 rounded-xl glass border border-white/10 hover:border-burnt-orange/40 transition-all group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            whileHover={{ scale: 1.01 }}
+          >
+            <Github className="w-8 h-8 text-white/80 group-hover:text-burnt-orange transition-colors shrink-0" />
+            <div className="flex-1">
+              <p className="text-white font-semibold">View my work on GitHub</p>
+              <p className="text-white/50 text-sm">github.com/zuma3247</p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-white/30 group-hover:text-burnt-orange transition-all group-hover:translate-x-1 shrink-0" />
+          </motion.a>
+        )}
+
         {/* Projects grid */}
         <motion.section
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -385,11 +407,14 @@ export function ContentSection({ section, onBack }: ContentSectionProps) {
         </motion.section>
       </main>
 
-      {/* Project modal */}
-      <ProjectModal
+        <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
+
+      <div className="relative z-10 mt-16 text-left">
+        <Footer onNavigate={onNavigate} />
+      </div>
     </motion.div>
   );
 }

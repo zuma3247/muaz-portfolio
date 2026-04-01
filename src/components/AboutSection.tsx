@@ -2,12 +2,14 @@ import { motion } from "motion/react";
 import { ArrowLeft, User } from "lucide-react";
 import profileImage from "figma:asset/4818c55379a67e1e42d245e328dec518de1744b1.png";
 import { Breadcrumb } from "./Breadcrumb";
+import { Footer } from "./Footer";
 
 interface AboutSectionProps {
   onBack: () => void;
+  onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
-export function AboutSection({ onBack }: AboutSectionProps) {
+export function AboutSection({ onBack, onNavigate }: AboutSectionProps) {
   return (
     <motion.div
       className="min-h-screen bg-[#0a0e1a] relative overflow-hidden"
@@ -29,7 +31,7 @@ export function AboutSection({ onBack }: AboutSectionProps) {
       </motion.button>
 
       {/* Content */}
-      <main className="relative z-10 max-w-6xl mx-auto px-4 py-16 md:px-8 md:py-24">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -167,6 +169,10 @@ export function AboutSection({ onBack }: AboutSectionProps) {
           </motion.div>
         </section>
       </main>
+
+      <div className="relative z-10">
+        <Footer onNavigate={onNavigate} />
+      </div>
     </motion.div>
   );
 }

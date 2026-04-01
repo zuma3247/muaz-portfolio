@@ -2,9 +2,11 @@ import { motion } from "motion/react";
 import { ArrowLeft, Briefcase, Calendar, MapPin } from "lucide-react";
 import { Breadcrumb } from "./Breadcrumb";
 import { useState } from "react";
+import { Footer } from "./Footer";
 
 interface WorkExperienceProps {
   onBack: () => void;
+  onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
 interface Experience {
@@ -22,7 +24,7 @@ const experiences: Experience[] = [
     company: "Islamic Foundation of Greater St. Louis",
     position: "Database & IT Intern",
     location: "St. Louis, MO",
-    duration: "Fall 2025 - Present",
+    duration: "Fall 2025 – December 2025",
     description:
       "Developed a full-stack web app for Sunday Madrassa using Next.js, Firebase, and Genkit AI. Automated class roster generation with SQL and built a Notion-based IT ticketing system.\n\nLed Chromebook setup for MAP testing (70+ devices) and analyzed network performance via Cisco Meraki.",
     achievements: [
@@ -32,7 +34,6 @@ const experiences: Experience[] = [
       "Managed Chromebook deployment for 70+ devices for standardized testing",
       "Analyzed and optimized network performance using Cisco Meraki dashboard",
     ],
-    current: true,
   },
   {
     company: "Campus Activities, Webster University",
@@ -82,7 +83,7 @@ const experiences: Experience[] = [
   },
 ];
 
-export function WorkExperienceSection({ onBack }: WorkExperienceProps) {
+export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProps) {
   const [activeSection, setActiveSection] = useState<number | null>(null);
 
   const scrollToExperience = (index: number) => {
@@ -141,7 +142,7 @@ export function WorkExperienceSection({ onBack }: WorkExperienceProps) {
       </motion.nav>
 
       {/* Content */}
-      <main className="relative z-10 max-w-6xl mx-auto px-4 py-16 md:px-8 md:py-24">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -299,6 +300,10 @@ export function WorkExperienceSection({ onBack }: WorkExperienceProps) {
           </div>
         </motion.aside>
       </main>
+
+      <div className="relative z-10 mt-16">
+        <Footer onNavigate={onNavigate} />
+      </div>
     </motion.div>
   );
 }

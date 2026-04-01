@@ -1,12 +1,14 @@
 import { motion } from "motion/react";
 import { ArrowLeft, Mail, Linkedin, MessageSquare } from "lucide-react";
 import { Breadcrumb } from "./Breadcrumb";
+import { Footer } from "./Footer";
 
 interface ContactSectionProps {
   onBack: () => void;
+  onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
-export function ContactSection({ onBack }: ContactSectionProps) {
+export function ContactSection({ onBack, onNavigate }: ContactSectionProps) {
   return (
     <motion.div
       className="min-h-screen bg-[#0a0e1a] relative overflow-hidden"
@@ -28,7 +30,7 @@ export function ContactSection({ onBack }: ContactSectionProps) {
       </motion.button>
 
       {/* Content */}
-      <main className="relative z-10 max-w-4xl mx-auto px-4 py-16 md:px-8 md:py-24">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -175,6 +177,10 @@ export function ContactSection({ onBack }: ContactSectionProps) {
           </div>
         </motion.section>
       </main>
+
+      <div className="relative z-10 mt-16">
+        <Footer onNavigate={onNavigate} />
+      </div>
     </motion.div>
   );
 }

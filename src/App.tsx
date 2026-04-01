@@ -33,40 +33,79 @@ export default function App() {
     }
   }, []);
 
+  // Set up history API for back button support
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state as { section?: Section } | null;
+      if (state && state.section !== undefined) {
+        setCurrentSection(state.section);
+      } else {
+        // Fallback to URL path
+        const path = window.location.pathname.substring(1);
+        const validSections = ["leadership", "design", "technology", "about", "contact", "work-experience", "websterleads"];
+        if (validSections.includes(path)) {
+          setCurrentSection(path as Section);
+        } else {
+          setCurrentSection(null);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    // Initial load state
+    const path = window.location.pathname.substring(1);
+    const validSections = ["leadership", "design", "technology", "about", "contact", "work-experience", "websterleads"];
+    if (validSections.includes(path)) {
+      setCurrentSection(path as Section);
+      window.history.replaceState({ section: path }, '', '/' + path);
+    } else {
+      window.history.replaceState({ section: null }, '', '/');
+    }
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = (section: Section) => {
+    setCurrentSection(section);
+    const url = section ? `/${section}` : '/';
+    window.history.pushState({ section }, '', url);
+  };
+
   const handleSkipLoading = () => {
     setIsLoading(false);
     localStorage.setItem('hasVisitedNexus', 'true');
   };
 
   const handleCoreSelect = (section: "leadership" | "design" | "technology") => {
-    setCurrentSection(section);
+    navigate(section);
   };
 
   const handleAboutClick = () => {
-    setCurrentSection("about");
+    navigate("about");
   };
 
   const handleWorkExperienceClick = () => {
-    setCurrentSection("work-experience");
+    navigate("work-experience");
   };
 
   const handleContactClick = () => {
-    setCurrentSection("contact");
+    navigate("contact");
   };
 
   const handleWebsterLEADSClick = () => {
-    setCurrentSection("websterleads");
+    navigate("websterleads");
   };
 
   const handleBack = () => {
-    setCurrentSection(null);
+    navigate(null);
   };
 
   const handleGlobalNavigation = (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => {
     if (section === "hub") {
-      setCurrentSection(null);
+      navigate(null);
     } else {
-      setCurrentSection(section);
+      navigate(section);
     }
   };
 
@@ -84,18 +123,19 @@ export default function App() {
         {isLoading ? (
           <LoadingScreen key="loading" onSkip={handleSkipLoading} />
         ) : currentSection === "about" ? (
-          <AboutSection key="about" onBack={handleBack} />
+          <AboutSection key="about" onBack={handleBack} onNavigate={handleGlobalNavigation} />
         ) : currentSection === "work-experience" ? (
-          <WorkExperienceSection key="work-experience" onBack={handleBack} />
+          <WorkExperienceSection key="work-experience" onBack={handleBack} onNavigate={handleGlobalNavigation} />
         ) : currentSection === "contact" ? (
-          <ContactSection key="contact" onBack={handleBack} />
+          <ContactSection key="contact" onBack={handleBack} onNavigate={handleGlobalNavigation} />
         ) : currentSection === "websterleads" ? (
-          <WebsterLEADSSection key="websterleads" onBack={handleBack} />
+          <WebsterLEADSSection key="websterleads" onBack={handleBack} onNavigate={handleGlobalNavigation} />
         ) : currentSection ? (
           <ContentSection
             key={currentSection}
             section={currentSection as "leadership" | "design" | "technology"}
             onBack={handleBack}
+            onNavigate={handleGlobalNavigation}
           />
         ) : (
           <NexusHub 
@@ -105,6 +145,7 @@ export default function App() {
             onWorkExperienceClick={handleWorkExperienceClick}
             onContactClick={handleContactClick}
             onWebsterLEADSClick={handleWebsterLEADSClick}
+            onNavigate={handleGlobalNavigation}
           />
         )}
       </AnimatePresence>

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { Menu, X, User, Briefcase, Mail, TrendingUp, PenTool, Cpu, Home, Award } from "lucide-react";
+import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
 
 interface GlobalNavProps {
   currentSection: string | null;
@@ -70,6 +71,12 @@ export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
             >
               {/* Header */}
               <div className="mb-8 pt-20">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
+                    <img src={logoImage} alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <span className="text-white font-bold tracking-widest text-lg">MUAZ</span>
+                </div>
                 <h2 className="text-white tracking-wide mb-2">Navigation</h2>
                 <p className="text-white/75 text-sm">Jump to any section</p>
               </div>

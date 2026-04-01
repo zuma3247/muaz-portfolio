@@ -11,9 +11,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+import { Footer } from "./Footer";
 
 interface WebsterLEADSSectionProps {
   onBack: () => void;
+  onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
 }
 
 type SubSection = "philosophy" | "growth" | "ethics" | "ples" | "international";
@@ -320,7 +322,7 @@ const ple2AccordionItems = [
 function PLECard({
   title, org, icon: Icon, color, items, who, reason,
 }: {
-  title: string; org: string; icon: React.ComponentType<{className?: string}>; color: string;
+  title: string; org: string; icon: React.ComponentType<{className?: string; style?: React.CSSProperties}>; color: string;
   items: typeof ple1AccordionItems; who: string; reason: string;
 }) {
   return (
@@ -454,7 +456,7 @@ function InternationalTab() {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
-export function WebsterLEADSSection({ onBack }: WebsterLEADSSectionProps) {
+export function WebsterLEADSSection({ onBack, onNavigate }: WebsterLEADSSectionProps) {
   const [activeTab, setActiveTab] = useState<SubSection>("philosophy");
 
   return (
@@ -477,7 +479,7 @@ export function WebsterLEADSSection({ onBack }: WebsterLEADSSectionProps) {
         <ArrowLeft className="w-6 h-6 text-white group-hover:text-burnt-orange transition-colors" />
       </motion.button>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-4 py-16 md:px-8 md:py-24">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -548,6 +550,10 @@ export function WebsterLEADSSection({ onBack }: WebsterLEADSSectionProps) {
           {activeTab === "international" && <InternationalTab />}
         </motion.div>
       </main>
+
+      <div className="relative z-10 mt-16">
+        <Footer onNavigate={onNavigate} />
+      </div>
     </motion.div>
   );
 }
