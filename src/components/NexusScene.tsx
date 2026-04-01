@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Html, Float } from "@react-three/drei";
+import { Html, Float, Edges } from "@react-three/drei";
 import {
   TextureLoader, MathUtils, DoubleSide,
   BufferGeometry, BufferAttribute, Points, PointsMaterial,
@@ -54,9 +54,10 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
     <group>
       <mesh ref={meshRef} position={[0, 0, -0.5]}>
         <icosahedronGeometry args={[1.2, 1]} />
-        <meshBasicMaterial color="#E36B3D" wireframe opacity={0.35} transparent />
+        <meshStandardMaterial color="#050810" metalness={0.9} roughness={0.15} />
+        <Edges scale={1.001} threshold={15} color="#E36B3D" opacity={0.6} transparent />
       </mesh>
-      <pointLight color="#E36B3D" intensity={3.5} distance={6} decay={2} position={[0, 0, 0]} />
+      <pointLight color="#E36B3D" intensity={isLite ? 2.5 : 1} distance={8} decay={2} position={[0, 0, 0]} />
       <Float speed={1.5} rotationIntensity={0} floatIntensity={0.3}>
         <mesh position={[0, 0, 1]}>
           <planeGeometry args={[2.4, 2.4]} />
@@ -71,7 +72,7 @@ function OrbitalRing({ tiltRad }: { tiltRad: number }) {
   return (
     <mesh rotation={[tiltRad, 0, 0]}>
       <torusGeometry args={[RADIUS, 0.015, 8, 96]} />
-      <meshBasicMaterial color="#E36B3D" opacity={0.25} transparent />
+      <meshStandardMaterial color="#E36B3D" metalness={0.8} roughness={0.2} opacity={0.6} transparent />
     </mesh>
   );
 }
@@ -174,10 +175,13 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={hovered ? 2.5 : 1.2}
+          emissiveIntensity={hovered ? 1.5 : 0.6}
+          metalness={0.8}
+          roughness={0.1}
           transparent
           opacity={1}
         />
+        <pointLight color={color} intensity={hovered ? 3 : 1.5} distance={RADIUS * 2.5} decay={2} />
       </mesh>
 
       <Html
@@ -247,7 +251,9 @@ export function NexusScene({ onCoreSelect, tier, logoSrc }: NexusSceneProps) {
       dpr={tier === "full3d" ? [1, 2] : 1}
     >
       <CameraDrift />
-      <ambientLight intensity={0.3} />
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[5, 5, 5]} intensity={1.5} />
+      <directionalLight position={[-5, -5, -5]} intensity={0.5} color="#3D8BE3" />
 
       <CentralComposite logoSrc={logoSrc} isLite={isLite} />
       <OrbitalRing tiltRad={tiltRad} />
