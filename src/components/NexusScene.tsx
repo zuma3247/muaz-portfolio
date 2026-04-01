@@ -1,19 +1,16 @@
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Html, Float, Edges } from "@react-three/drei";
-import {
-  TextureLoader, MathUtils, DoubleSide,
-  BufferGeometry, BufferAttribute, Points, PointsMaterial,
-  type Mesh, type Group,
-} from "three";
+import { Html, Float, Edges, Environment, MeshTransmissionMaterial, Sparkles, Stars } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { TextureLoader, MathUtils, DoubleSide, type Mesh, type Group } from "three";
 import { Users, PenTool, Cpu } from "lucide-react";
 import type { QualityTier } from "../utils/detectQuality";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const TILT = 0.436; // 25 degrees in radians
-const RADIUS = 3.0;
-const MAX_Z = RADIUS * Math.sin(TILT); // ≈ 1.27
+const RADIUS = 3.5; // Slightly increased radius for breathing room
+const MAX_Z = RADIUS * Math.sin(TILT); 
 const ORBIT_SPEED = 0.25; // rad/s
 
 function orbitPosition(theta: number, tilt: number, r: number): [number, number, number] {
@@ -44,23 +41,47 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
   const meshRef = useRef<Mesh>(null!);
   const logoTexture = useLoader(TextureLoader, logoSrc);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!isLite && meshRef.current) {
       meshRef.current.rotation.y += 0.003;
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
     }
   });
 
   return (
     <group>
       <mesh ref={meshRef} position={[0, 0, -0.5]}>
-        <icosahedronGeometry args={[1.2, 1]} />
-        <meshStandardMaterial color="#050810" metalness={0.9} roughness={0.15} />
-        <Edges scale={1.001} threshold={15} color="#E36B3D" opacity={0.6} transparent />
+        <icosahedronGeometry args={[1.5, 0]} />
+        {isLite ? (
+          <meshStandardMaterial color="#0A1128" metalness={0.9} roughness={0.1} />
+        ) : (
+          <MeshTransmissionMaterial
+            buffer={null!}
+            color="#0A1128" // Dark navy tint
+            attenuationColor="#E36B3D"
+            attenuationDistance={5}
+            thickness={1.5}
+            roughness={0.05}
+            transmission={1}
+            ior={1.3}
+            chromaticAberration={0.05}
+            backside={true}
+          />
+        )}
+        
+        {/* Inner Glowing Core */}
+        <mesh>
+          <icosahedronGeometry args={[0.6, 1]} />
+          <meshBasicMaterial color="#E36B3D" toneMapped={false} />
+          <pointLight color="#E36B3D" intensity={isLite ? 1.5 : 3} distance={10} />
+        </mesh>
+
+        <Edges scale={1.001} threshold={15} color="#3D8BE3" opacity={0.3} transparent />
       </mesh>
-      <pointLight color="#E36B3D" intensity={isLite ? 2.5 : 1} distance={8} decay={2} position={[0, 0, 0]} />
-      <Float speed={1.5} rotationIntensity={0} floatIntensity={0.3}>
-        <mesh position={[0, 0, 1]}>
-          <planeGeometry args={[2.4, 2.4]} />
+      
+      <Float speed={2} rotationIntensity={0} floatIntensity={0.5}>
+        <mesh position={[0, 0, 1.2]}>
+          <planeGeometry args={[2.8, 2.8]} />
           <meshBasicMaterial map={logoTexture} transparent alphaTest={0.01} side={DoubleSide} />
         </mesh>
       </Float>
@@ -71,61 +92,11 @@ function CentralComposite({ logoSrc, isLite }: { logoSrc: string; isLite: boolea
 function OrbitalRing({ tiltRad }: { tiltRad: number }) {
   return (
     <mesh rotation={[tiltRad, 0, 0]}>
-      <torusGeometry args={[RADIUS, 0.015, 8, 96]} />
-      <meshStandardMaterial color="#E36B3D" metalness={0.8} roughness={0.2} opacity={0.6} transparent />
+      <torusGeometry args={[RADIUS, 0.008, 8, 128]} />
+      <meshStandardMaterial color="#E36B3D" metalness={0.8} roughness={0.2} opacity={0.4} transparent />
     </mesh>
   );
 }
-
-// ── ParticleField: uses <points> + BufferGeometry — no per-frame matrix loop ──
-
-function ParticleField({ count }: { count: number }) {
-  const pointsRef = useRef<Points>(null!);
-
-  // Build positions array once
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 4 + Math.random() * 4;
-      arr[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      arr[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return arr;
-  }, [count]);
-
-  // Drift upward each frame — mutate the buffer attribute directly (no React state)
-  useFrame(() => {
-    if (!pointsRef.current) return;
-    const attr = pointsRef.current.geometry.attributes.position as BufferAttribute;
-    for (let i = 0; i < count; i++) {
-      attr.array[i * 3 + 1] = (attr.array[i * 3 + 1] as number) + 0.005;
-      if ((attr.array[i * 3 + 1] as number) > 8) {
-        (attr.array as Float32Array)[i * 3 + 1] = -8;
-      }
-    }
-    attr.needsUpdate = true;
-  });
-
-  const geometry = useMemo(() => {
-    const geo = new BufferGeometry();
-    geo.setAttribute("position", new BufferAttribute(positions, 3));
-    return geo;
-  }, [positions]);
-
-  const material = useMemo(
-    () => new PointsMaterial({ color: "#E36B3D", size: 0.04, transparent: true, opacity: 0.35 }),
-    []
-  );
-
-  useEffect(() => () => { geometry.dispose(); material.dispose(); }, [geometry, material]);
-
-  return <points ref={pointsRef} geometry={geometry} material={material} />;
-}
-
-// ── OrbitingNode: label position driven by ref, no useState in render loop ──
 
 interface OrbitingNodeProps {
   id: "leadership" | "design" | "technology";
@@ -149,17 +120,16 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
     const [x, y, z] = orbitPosition(angleRef.current, tiltRad, RADIUS);
 
     groupRef.current.position.set(x, y, z);
-    groupRef.current.scale.setScalar(MathUtils.mapLinear(z, -0.3, MAX_Z, 0.85, 1.1));
+    groupRef.current.scale.setScalar(MathUtils.mapLinear(z, -0.3, MAX_Z, 0.85, 1.15));
 
     if (meshRef.current) {
-      (meshRef.current.material as any).opacity = MathUtils.mapLinear(z, -0.3, MAX_Z, 0.7, 1.0);
+      (meshRef.current.material as any).opacity = MathUtils.mapLinear(z, -0.3, MAX_Z, 0.6, 1.0);
     }
 
-    // Move label div directly — no React state update
     if (labelRef.current) {
       labelRef.current.style.transform = z < 0
-        ? "translate(-50%, -220%)"   // above node when behind
-        : "translate(30%, -50%)";    // right of node when in front
+        ? "translate(-50%, -220%)"   
+        : "translate(30%, -50%)";    
     }
   });
 
@@ -171,17 +141,22 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
       >
-        <sphereGeometry args={[0.35, 24, 24]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={hovered ? 1.5 : 0.6}
-          metalness={0.8}
-          roughness={0.1}
+        <sphereGeometry args={[0.35, 32, 32]} />
+        <MeshTransmissionMaterial 
+          color="#ffffff"
+          roughness={0}
+          transmission={0.9}
+          thickness={0.5}
+          ior={1.5}
           transparent
-          opacity={1}
         />
-        <pointLight color={color} intensity={hovered ? 3 : 1.5} distance={RADIUS * 2.5} decay={2} />
+        
+        {/* Glowing Inner Core causes massive bloom! */}
+        <mesh>
+          <sphereGeometry args={[0.15, 16, 16]} />
+          <meshBasicMaterial color={color} toneMapped={false} />
+          <pointLight color={color} intensity={hovered ? 5 : 2} distance={RADIUS * 3} decay={2} />
+        </mesh>
       </mesh>
 
       <Html
@@ -190,28 +165,38 @@ function OrbitingNode({ id, label, color, Icon, angleRad, tiltRad, onSelect }: O
         zIndexRange={[100, 0]}
         style={{ pointerEvents: "none", whiteSpace: "nowrap" }}
       >
-        {/* Wrapper div — its transform is mutated directly in useFrame */}
-        <div ref={labelRef} style={{ transform: "translate(30%, -50%)" }}>
+        <div ref={labelRef} style={{ transform: "translate(30%, -50%)", transition: "transform 0.1s" }}>
           <button
             aria-label={`Navigate to ${label}`}
             onClick={() => onSelect(id)}
             style={{
               pointerEvents: "auto",
-              background: "rgba(16, 28, 54, 0.9)",
-              border: `1px solid ${color}80`,
-              borderRadius: "6px",
-              padding: "6px 14px",
+              background: "rgba(10, 14, 26, 0.7)",
+              backdropFilter: "blur(8px)",
+              border: `1px solid ${color}${hovered ? 'ff' : '60'}`,
+              borderRadius: "8px",
+              padding: "8px 16px",
               color,
-              fontSize: "11px",
+              fontSize: "12px",
               fontWeight: 600,
               letterSpacing: "0.15em",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "6px",
+              gap: "8px",
+              boxShadow: hovered ? `0 0 15px ${color}40` : "none",
+              transition: "all 0.3s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = color)}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = `${color}80`)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = color;
+              e.currentTarget.style.boxShadow = `0 0 15px ${color}60`;
+              e.currentTarget.style.background = "rgba(10, 14, 26, 0.9)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = `${color}60`;
+              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.background = "rgba(10, 14, 26, 0.7)";
+            }}
           >
             <Icon style={{ width: 14, height: 14 }} />
             {label}
@@ -233,42 +218,49 @@ interface NexusSceneProps {
 export function NexusScene({ onCoreSelect, tier, logoSrc }: NexusSceneProps) {
   const isLite = tier === "lite3d";
   const tiltRad = isLite ? 0.175 : TILT;
-  const particleCount = tier === "full3d" ? 300 : 40;
-
-  // CSS filter gives a cheap bloom-like glow without a postprocessing library
-  const canvasStyle: React.CSSProperties = {
-    position: "absolute",
-    inset: 0,
-    ...(tier === "full3d" && { filter: "blur(0px) contrast(1) brightness(1.1)" }),
-  };
+  const particleCount = tier === "full3d" ? 200 : 40;
 
   return (
     <Canvas
-      camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 8] }}
+      camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 8.5] }}
       gl={{ antialias: true, alpha: true }}
-      style={canvasStyle}
+      style={{ position: "absolute", inset: 0 }}
       frameloop={isLite ? "demand" : "always"}
       dpr={tier === "full3d" ? [1, 2] : 1}
     >
+      <Environment preset="city" />
       <CameraDrift />
       <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 5, 5]} intensity={1.5} />
-      <directionalLight position={[-5, -5, -5]} intensity={0.5} color="#3D8BE3" />
+      <directionalLight position={[5, 10, 5]} intensity={2} />
+      <directionalLight position={[-5, -10, -5]} intensity={0.5} color="#3D8BE3" />
 
-      <CentralComposite logoSrc={logoSrc} isLite={isLite} />
-      <OrbitalRing tiltRad={tiltRad} />
-      <ParticleField count={particleCount} />
+      {/* Main rotating assembly */}
+      <group position={[0, -0.2, 0]}>
+        <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
+          <CentralComposite logoSrc={logoSrc} isLite={isLite} />
+          <OrbitalRing tiltRad={tiltRad} />
+          
+          {CORE_DEFS.map((def) => (
+            <OrbitingNode
+              key={def.id}
+              {...def}
+              tiltRad={tiltRad}
+              onSelect={onCoreSelect}
+            />
+          ))}
+        </Float>
+      </group>
 
-      {CORE_DEFS.map((def) => (
-        <OrbitingNode
-          key={def.id}
-          {...def}
-          tiltRad={tiltRad}
-          onSelect={onCoreSelect}
-        />
-      ))}
+      {/* Atmospheric Space Dust */}
+      <Sparkles count={particleCount} scale={18} size={2.5} speed={0.4} color="#E36B3D" opacity={0.6} />
+      <Stars radius={20} depth={50} count={isLite ? 500 : 2500} factor={4} saturation={0.5} fade speed={1} />
 
-      {/* Bloom replaced with CSS filter on the canvas wrapper — no postprocessing lib needed */}
+      {/* High-End Post-Processing */}
+      {!isLite && (
+        <EffectComposer>
+          <Bloom luminanceThreshold={0.8} mipmapBlur intensity={1.5} />
+        </EffectComposer>
+      )}
     </Canvas>
   );
 }
