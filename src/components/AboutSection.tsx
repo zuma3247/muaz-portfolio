@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { X, User } from "lucide-react";
-import profileImage from "figma:asset/4818c55379a67e1e42d245e328dec518de1744b1.png";
+import profileImage from "../assets/profile-image.png";
 import { Breadcrumb } from "./Breadcrumb";
 import { Footer } from "./Footer";
 

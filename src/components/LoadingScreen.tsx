@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
+import logoImage from "../assets/logo-image.png";
 
 export function LoadingScreen() {
   return (

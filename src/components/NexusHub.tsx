@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 import { Users, PenTool, Cpu, User, Mail, Briefcase, Award, ArrowRight } from "lucide-react";
-import profileImage from "figma:asset/4818c55379a67e1e42d245e328dec518de1744b1.png";
-import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
+import profileImage from "../assets/profile-image.png";
+import logoImage from "../assets/logo-image.png";
 import { Footer } from "./Footer";
 
 interface NexusHubProps {

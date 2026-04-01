@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 import { Menu, X, User, Briefcase, Mail, TrendingUp, PenTool, Cpu, Home, Award } from "lucide-react";
-import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
+import logoImage from "../assets/logo-image.png";
 
 interface GlobalNavProps {
   currentSection: string | null;

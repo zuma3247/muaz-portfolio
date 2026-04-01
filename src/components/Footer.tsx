@@ -1,5 +1,5 @@
 import { Github, Linkedin, Mail } from "lucide-react";
-import logoImage from "figma:asset/b0989652989926fe92b786073197f74a529bda75.png";
+import logoImage from "../assets/logo-image.png";
 
 interface FooterProps {
   onNavigate: (section: "hub" | "about" | "work-experience" | "contact" | "leadership" | "design" | "technology" | "websterleads") => void;
