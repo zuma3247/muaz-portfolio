@@ -137,6 +137,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Lato', sans-serif;
   }
 
   /* Keyboard focus states */
@@ -144,6 +145,10 @@
   a:focus-visible,
   [tabindex]:focus-visible {
     @apply outline-2 outline-offset-2 outline-burnt-orange ring-2 ring-burnt-orange/50;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lustria', serif;
   }
 }
 
@@ -153,24 +158,28 @@
 @layer base {
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
+      font-family: 'Lustria', serif;
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
     }
 
     h2 {
+      font-family: 'Lustria', serif;
       font-size: var(--text-xl);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
     }
 
     h3 {
+      font-family: 'Lustria', serif;
       font-size: var(--text-lg);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
     }
 
     h4 {
+      font-family: 'Lustria', serif;
       font-size: var(--text-base);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
