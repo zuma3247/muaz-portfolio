@@ -123,7 +123,7 @@ export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProp
         transition={{ delay: 0.5 }}
       >
         <div className="glass rounded-lg p-4">
-          <p className="text-white/75 text-xs mb-3 uppercase tracking-wider">Jump to</p>
+          <p className="text-white/85 text-xs mb-3 uppercase tracking-wider">Jump to</p>
           <div className="space-y-2">
             {experiences.map((exp, index) => (
               <button
@@ -131,8 +131,8 @@ export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProp
                 onClick={() => scrollToExperience(index)}
                 className={`block w-full text-left px-3 py-2 rounded text-xs transition-all ${
                   activeSection === index
-                    ? "bg-burnt-orange/20 text-burnt-orange"
-                    : "text-white/70 hover:text-burnt-orange hover:bg-white/5"
+                    ? "bg-burnt-orange/20 text-burnt-orange font-bold"
+                    : "text-white/85 hover:text-burnt-orange hover:bg-white/5"
                 }`}
               >
                 {exp.company.split(' ').slice(0, 2).join(' ')}
@@ -233,7 +233,7 @@ export function WorkExperienceSection({ onBack, onNavigate }: WorkExperienceProp
                     <h4 className="text-burnt-orange mb-3">{exp.company}</h4>
 
                     {/* Metadata */}
-                    <div className="flex flex-wrap gap-4 text-white/60 text-sm">
+                    <div className="flex flex-wrap gap-4 text-white/80 text-sm">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span>{exp.duration}</span>

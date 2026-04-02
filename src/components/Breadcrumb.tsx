@@ -23,19 +23,19 @@ export function Breadcrumb({ items, onHomeClick }: BreadcrumbProps) {
           whileTap={{ scale: 0.95 }}
           aria-label="Go to home/hub"
         >
-          <Home className="w-4 h-4 text-white/50 group-hover/home:text-burnt-orange transition-colors" />
+          <Home className="w-4 h-4 text-white/70 group-hover/home:text-burnt-orange transition-colors" />
         </motion.button>
       ) : (
-        <Home className="w-4 h-4 text-white/30" />
+        <Home className="w-4 h-4 text-white/50" />
       )}
       
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
-          <ChevronRight className="w-4 h-4 text-white/40" />
+          <ChevronRight className="w-4 h-4 text-white/60" />
           {item.onClick ? (
             <button
               onClick={item.onClick}
-              className="text-white/70 hover:text-burnt-orange transition-colors"
+              className="text-white/80 hover:text-burnt-orange transition-colors"
             >
               {item.label}
             </button>

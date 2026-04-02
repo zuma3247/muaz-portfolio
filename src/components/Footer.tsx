@@ -28,7 +28,7 @@ export function Footer({ onNavigate, activeSection }: FooterProps) {
               MUAZ
             </span>
           </button>
-          <p className="text-white/40 text-xs">
+          <p className="text-white/60 text-xs">
             © 2025 Muaz Mohammed
           </p>
         </div>
@@ -50,7 +50,7 @@ export function Footer({ onNavigate, activeSection }: FooterProps) {
             href="https://github.com/zuma3247"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/70 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
+            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/85 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
             aria-label="GitHub"
           >
             <Github className="w-4 h-4" />
@@ -59,14 +59,14 @@ export function Footer({ onNavigate, activeSection }: FooterProps) {
             href="https://linkedin.com/in/muazuddin-mohammed"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/70 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
+            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/85 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
             aria-label="LinkedIn"
           >
             <Linkedin className="w-4 h-4" />
           </a>
           <a
             href="mailto:muazuddin12@gmail.com"
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/70 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
+            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/85 hover:bg-burnt-orange/20 hover:text-burnt-orange transition-colors border border-white/10 hover:border-burnt-orange/50"
             aria-label="Email"
           >
             <Mail className="w-4 h-4" />

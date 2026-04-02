@@ -524,9 +524,9 @@ export function WebsterLEADSSection({ onBack, onNavigate }: WebsterLEADSSectionP
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                 activeTab === id
-                  ? "bg-burnt-orange/20 border border-burnt-orange/60 text-burnt-orange"
+                  ? "bg-burnt-orange/10 border-2 border-burnt-orange text-burnt-orange shadow-lg shadow-burnt-orange/10"
                   : "glass text-white/65 hover:text-white/90 border border-white/10"
               }`}
             >

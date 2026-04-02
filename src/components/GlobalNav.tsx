@@ -146,7 +146,7 @@ export function GlobalNav({ currentSection, onNavigate }: GlobalNavProps) {
 
               {/* Footer info */}
               <div className="mt-8 pt-8 border-t border-white/10">
-                <p className="text-white/40 text-xs">
+                <p className="text-white/60 text-xs text-center opacity-80 italic">
                   The Personal Nexus © 2025
                 </p>
               </div>

@@ -152,9 +152,9 @@ export function ContactSection({ onBack, onNavigate }: ContactSectionProps) {
           {/* Additional info */}
           <div className="glass rounded-lg p-8">
             <h3 className="text-white mb-4 text-center">Response Time</h3>
-            <p className="text-white/75 text-center">
+            <p className="text-white/85 text-center leading-relaxed">
               I typically respond to emails within 24-48 hours. For urgent matters, 
-              please mention "URGENT" in the subject line.
+              please mention <span className="text-white font-bold">"URGENT"</span> in the subject line.
             </p>
           </div>
 

@@ -184,7 +184,7 @@ export function NexusHub({
                     >
                       {card.label}
                     </h2>
-                    <p className="text-white/60 text-sm leading-relaxed">
+                    <p className="text-white/75 text-sm leading-relaxed">
                       {card.copy}
                     </p>
                   </div>
@@ -198,7 +198,7 @@ export function NexusHub({
                     <Icon className="w-6 h-6" style={{ color: card.color }} />
                   </div>
                   <ArrowRight
-                    className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-all group-hover:translate-x-1 shrink-0"
+                    className="w-5 h-5 text-white/50 group-hover:text-white/80 transition-all group-hover:translate-x-1 shrink-0"
                   />
                 </motion.button>
               );

@@ -394,9 +394,9 @@ export function ContentSection({ section, onBack, onNavigate }: ContentSectionPr
             <Github className="w-8 h-8 text-white/80 group-hover:text-burnt-orange transition-colors shrink-0" />
             <div className="flex-1">
               <p className="text-white font-semibold">View my work on GitHub</p>
-              <p className="text-white/50 text-sm">github.com/zuma3247</p>
+              <p className="text-white/70 text-sm">github.com/zuma3247</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-white/30 group-hover:text-burnt-orange transition-all group-hover:translate-x-1 shrink-0" />
+            <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-burnt-orange transition-all group-hover:translate-x-1 shrink-0" />
           </motion.a>
         )}
 
