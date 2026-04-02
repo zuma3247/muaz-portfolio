@@ -482,8 +482,8 @@ export function WebsterLEADSSection({ onBack, onNavigate }: WebsterLEADSSectionP
       <main className="relative z-10 max-w-6xl mx-auto px-4 pt-24 pb-16 md:py-24">
         {/* Breadcrumb */}
         <Breadcrumb
+          onHomeClick={onBack}
           items={[
-            { label: "Hub", onClick: onBack },
             { label: "WebsterLEADS Portfolio" },
           ]}
         />
